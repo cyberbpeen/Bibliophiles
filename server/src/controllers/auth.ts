@@ -22,7 +22,7 @@ export const register = async (
         password: await hashPassword(password),
       },
     });
-    return res.status(201).json({ success: true, user: "user" });
+    return res.status(201).json("User Registered Successfully!");
   } catch (err) {
     next(err);
   }
@@ -35,6 +35,7 @@ export const login = async (
 ) => {
   try {
     const { email, password } = req.body;
+
     const user = await prisma.user.findUnique({
       where: {
         email,
@@ -49,7 +50,7 @@ export const login = async (
 
     const token = generateToken(user);
 
-    return res.status(200).json({ token });
+    return res.status(200).json(token);
   } catch (err) {
     next(err);
   }

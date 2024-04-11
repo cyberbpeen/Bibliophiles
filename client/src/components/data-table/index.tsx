@@ -1,17 +1,20 @@
 import {
   ColumnDef,
+  SortingState,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import {
   Table,
-  TableBody,
-  TableCell,
-  TableHead,
   TableHeader,
+  TableBody,
   TableRow,
-} from "../ui/Table";
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -22,13 +25,20 @@ const DataTable = <TData, TValue>({
   data,
   columns,
 }: DataTableProps<TData, TValue>) => {
+  const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+
+    state: {
+      sorting,
+    },
   });
   return (
-    <div className="border border-zinc-800 rounded-lg mt-8">
+    <div className="border rounded-lg space-y-2">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -57,7 +67,9 @@ const DataTable = <TData, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell>No results </TableCell>
+              <TableCell colSpan={columns.length} className="text-center h-24">
+                No results{" "}
+              </TableCell>
             </TableRow>
           )}
         </TableBody>

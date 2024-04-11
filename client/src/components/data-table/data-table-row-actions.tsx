@@ -5,9 +5,9 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/DropdownMenu";
-import { MdMoreVert } from "react-icons/md";
-import { Flex } from "../ui";
+} from "@/components/ui/dropdown-menu";
+import Flex from "@/components/ui/flex";
+import { EllipsisVertical } from "lucide-react";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -23,8 +23,8 @@ const DataTableRowActions = <TData,>({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Flex className="h-10 w-10 rounded text-zinc-50 hover:bg-zinc-800/50">
-          <MdMoreVert />
+        <Flex className="h-10 w-10 rounded text-muted-foreground hover:bg-muted">
+          <EllipsisVertical />
         </Flex>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

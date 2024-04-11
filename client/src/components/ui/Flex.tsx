@@ -1,6 +1,6 @@
 import React from "react";
-import { cn } from "../../lib/utils";
 import { VariantProps, cva } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
 const flexVariants = cva("flex", {
   variants: {
@@ -45,10 +45,10 @@ interface FlexProps
     VariantProps<typeof flexVariants> {}
 
 const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
-  ({ className, justify, item, gap, ...props }, ref) => (
+  ({ className, justify, item, gap, direction, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn(flexVariants({ justify, item, gap, className }))}
+      className={cn(flexVariants({ justify, item, gap, direction, className }))}
       {...props}
     />
   )

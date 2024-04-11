@@ -1,48 +1,67 @@
-import axios from "axios";
-import { Text, Heading, Flex, Button } from "../../components/ui";
+import DataTable from "@/components/data-table";
+import Flex from "@/components/ui/flex";
+import { Genre } from "@/types/genre";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import DataTable from "../../components/data-table/data-table";
-import { getGenresColumns } from "./genre-column";
-import { Genre } from "../../types/genre";
+import { getGenresColumns } from "@/scenes/genres/genre-column";
+import AddGenreForm from "./add-genre-form";
+import { deleteGenre, getGenres } from "@/api/book";
+import { toast } from "@/components/ui/use-toast";
 
 const Genres = () => {
   const [genres, setGenres] = useState<Genre[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
-  const onEdit = useCallback(
-    (book: Genre) => alert(`On edit pressed for book with title ${book.title}`),
-    []
-  );
+  const onEdit = useCallback((genre: Genre) => {
+    setSelectedGenre(genre);
+    setIsDialogOpen(true);
+  }, []);
 
-  const onDelete = useCallback(
-    (book: Genre) =>
-      alert(`On delete pressed for book with title ${book.title}`),
-    []
-  );
+  const onDelete = useCallback((genre: Genre) => {
+    removeGenre(genre);
+  }, []);
+
+  const removeGenre = async ({ id, title }: Genre) => {
+    const response = await deleteGenre(id);
+    if (response.code === "success") {
+      toast({
+        title: "Genre Deleted!",
+        description: `${title} is deleted Successfully!`,
+      });
+    } else {
+      console.log(response.error.message);
+    }
+  };
+
   const columns = useMemo(() => getGenresColumns({ onEdit, onDelete }), []);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/v1/genres?limit=30")
-      .then(function (response) {
+    const getAllGenres = async () => {
+      const response = await getGenres({ limit: 10, page: 0 });
+      if (response.code === "success") {
         setGenres(response.data);
-      })
-      .catch(function (error) {
-        setError(error.message);
-      });
-  }, [genres, error]);
+      }
+    };
+    getAllGenres();
+  }, [isDialogOpen]);
+
   return (
     <div className="w-full h-full p-8">
-      <Flex justify="between">
+      <Flex justify="between" className="mb-6">
         <div>
-          <Heading as="H5" weight="bold">
-            Genres
-          </Heading>
-          <Text>Here's a list of all genres!</Text>
+          <h3 className="text-3xl font-bold">Genres</h3>
+          <p className="text-muted-foreground">Here's a list of all Genres!</p>
         </div>
-        <Button type="button" variant="outline">
-          Add Genre
-        </Button>
+        <AddGenreForm
+          isOpen={isDialogOpen}
+          genre={selectedGenre}
+          onOpenChange={(value) => {
+            setIsDialogOpen(value);
+            if (!value) {
+              setSelectedGenre(null);
+            }
+          }}
+        />
       </Flex>
       <DataTable columns={columns} data={genres} />
     </div>

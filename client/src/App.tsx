@@ -1,15 +1,16 @@
 import { BrowserRouter } from "react-router-dom";
-import Routes from "./routes";
-import AuthProvider from "./context/AuthProvider";
+import Routes from "@/routes";
+import AuthProvider from "@/context/auth-provider";
+import { ThemeProvider } from "@/context/theme-provider";
 
-function App() {
+export default function Home() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <Routes />
-      </AuthProvider>
+      <ThemeProvider defaultTheme="dark" storageKey="theme">
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }
-
-export default App;

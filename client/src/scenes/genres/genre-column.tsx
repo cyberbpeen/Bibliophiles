@@ -1,8 +1,8 @@
+import DataTableRowActions from "@/components/data-table/data-table-row-actions";
+import { Genre } from "@/types/genre";
 import { ColumnDef } from "@tanstack/react-table";
-import { Genre } from "../../types/genre";
-import DataTableRowActions from "../../components/data-table/data-table-row-actions";
 
-interface GenreColumnsProps {
+interface BookColumnsProps {
   onEdit: (value: Genre) => void;
   onDelete: (value: Genre) => void;
 }
@@ -10,7 +10,7 @@ interface GenreColumnsProps {
 export const getGenresColumns = ({
   onEdit,
   onDelete,
-}: GenreColumnsProps): ColumnDef<Genre>[] => [
+}: BookColumnsProps): ColumnDef<Genre>[] => [
   {
     header: "Title",
     accessorKey: "title",
@@ -19,7 +19,10 @@ export const getGenresColumns = ({
     header: "description",
     accessorKey: "descriptions",
   },
-
+  {
+    header: "status",
+    accessorKey: "genres",
+  },
   {
     id: "actions",
     cell: ({ row }) => (
